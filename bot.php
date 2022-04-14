@@ -76,15 +76,17 @@ foreach($x as $hst){
 	$r		= Run($host,head($cookie))[1];
 	$user	= explode('<',explode("siteUserFullName: '",$r)[1])[0];
 	if($user <= null ){
-		$r	= Run($host."/faucet.html",head($cookie))[1];
-		$user	= explode('<',explode("siteUserFullName: '",$r)[1])[0];
+		$user	= explode('</font>',explode('<font class="text-success">',$r)[1])[0];
 		if($user <= null ){
-			$r	= Run($host,head($cookie))[1];
-			$user	= explode('</font>',explode('<font class="text-success">',$r)[1])[0];
+			$user = explode('</a>',explode('<a href="/membership.html" class="text-success">',$r)[1])[0];
 			if($user <= null ){
-				print h."Login ".c.$host.m." failed ".k."please Update cookie".n;
-				print line();
-				goto Nex;
+				$r	= Run($host."/faucet.html",head($cookie))[1];
+				$user	= explode('<',explode("siteUserFullName: '",$r)[1])[0];
+				if($user <= null ){
+					print h."Login ".c.$host.m." failed ".k."please Update cookie".n;
+					print line();
+					goto Nex;
+				}
 			}
 		}
 	}
@@ -97,6 +99,7 @@ foreach($x as $hst){
 	if($ptc<= null){
 		$ptc = Run($host."/ptc.html",head($cookie))[1];
 	}
+	
 	$sid	= explode('"',explode('<div class="website_block" id="',$ptc)[1])[0];
 	if($sid){
 		print m."Visit Ptc";
